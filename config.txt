@@ -1,4 +1,5 @@
 ﻿// Parámetros
+userIDToPredict = 23 // ID of the ratings user we want to predict.
 
 // Directorios
 dirResources = ./resources/ // Directory where resources are found.

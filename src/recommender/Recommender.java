@@ -88,9 +88,8 @@ public class Recommender {
             Logger.getLogger(Recommender.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        //test
-        IndexedUser iU = dataManager.searchUser(250);
-        System.out.println(iU.getID() + " " + iU.getName() + " " + iU.getAge() + " " + iU.getOccupation() + " " + iU.getZipCode());
+        // Al turrón
+        dataManager.predictRating(dbReader.getUserIDToPredict() - 1);
 
     }
 

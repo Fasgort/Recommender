@@ -13,7 +13,6 @@ public abstract class Dictionary<T1> {
     protected ArrayList<T1> entryIDs; // Entry Dictionary ID -> entry
 
     protected T1 search(int idEntry) {
-        idEntry--; // Los datos empiezan desde la id 1, pero internamente desde 0.
         if (idEntry < entryIDs.size()) {
             return entryIDs.get(idEntry);
         } else {

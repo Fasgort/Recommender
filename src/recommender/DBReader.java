@@ -21,6 +21,7 @@ public class DBReader {
     private String fileItems = null;
     private String fileRatings = null;
     private String fileUsers = null;
+    private int userIDToPredict = -1;
 
     private DBReader(String stringConfData) {
 
@@ -57,6 +58,8 @@ public class DBReader {
                         case "fileUsers":
                             fileUsers = valor;
                             break;
+                        case "userIDToPredict":
+                            userIDToPredict = Integer.parseInt(valor);
                     }
                 }
             }
@@ -90,6 +93,12 @@ public class DBReader {
             try (FileWriter fw = new FileWriter(confData, true);
                     BufferedWriter bw = new BufferedWriter(fw)) {
 
+                if (userIDToPredict == -1) {
+                    userIDToPredict = 23;
+                    bw.append("userIDToPredict = " + userIDToPredict + " // ID of the ratings user we want to predict.");
+                    bw.newLine();
+                }
+
                 if (dirResources == null) {
                     dirResources = "./resources/";
                     bw.append("dirResources = " + dirResources + " // Directory where resources are found.");
@@ -122,6 +131,10 @@ public class DBReader {
 
         }
 
+    }
+
+    public int getUserIDToPredict() {
+        return userIDToPredict;
     }
 
     public String getDirResources() {
