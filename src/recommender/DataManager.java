@@ -136,6 +136,11 @@ public class DataManager {
                 userRatings.setQuick(i, 0.0);
             } else {
                 double prediction = userMean + sumRating / sumSimilitude;
+                if (prediction > 5.0) {
+                    prediction = 5.0;
+                } else if (prediction < 1.0) {
+                    prediction = 1.0;
+                }
                 userRatings.setQuick(i, prediction);
             }
 
