@@ -8,3 +8,4 @@ dirResources = ./resources/ // Directory where resources are found.
 fileItems = items.csv // Name of fileItems file. It will be located in the resources directory.
 fileRatings = ratings.csv // Name of fileRatings file. It will be located in the resources directory.
 fileUsers = users.csv // Name of fileUsers file. It will be located in the resources directory.
+fileUser23 = user23.csv // Name of fileUser23 file. It will be located in the resources directory.

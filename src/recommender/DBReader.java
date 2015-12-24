@@ -21,6 +21,7 @@ public class DBReader {
     private String fileItems = null;
     private String fileRatings = null;
     private String fileUsers = null;
+    private String fileUser23 = null;
     private int userIDToPredict = -1;
 
     private DBReader(String stringConfData) {
@@ -57,6 +58,9 @@ public class DBReader {
                             break;
                         case "fileUsers":
                             fileUsers = valor;
+                            break;
+                        case "fileUser23":
+                            fileUser23 = valor;
                             break;
                         case "userIDToPredict":
                             userIDToPredict = Integer.parseInt(valor);
@@ -123,6 +127,12 @@ public class DBReader {
                     bw.newLine();
                 }
 
+                if (fileUser23 == null) {
+                    fileUser23 = "user23.csv";
+                    bw.append("fileUser23 = " + fileUser23 + " // Name of fileUser23 file. It will be located in the resources directory.");
+                    bw.newLine();
+                }
+
                 return false;
             } catch (IOException ex) {
                 System.err.println(ex);
@@ -151,6 +161,10 @@ public class DBReader {
 
     public String getFileUsers() {
         return fileUsers;
+    }
+
+    public String getFileUser23() {
+        return fileUser23;
     }
 
 }

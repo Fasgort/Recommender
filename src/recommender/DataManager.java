@@ -1,12 +1,17 @@
 package recommender;
 
 import cern.colt.matrix.tdouble.DoubleMatrix1D;
+import cern.colt.matrix.tdouble.impl.SparseDoubleMatrix1D;
 import cern.colt.matrix.tdouble.impl.SparseDoubleMatrix2D;
-import cern.colt.matrix.tint.IntMatrix1D;
+import com.csvreader.CsvReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -155,6 +160,42 @@ public class DataManager {
         Collections.reverse(finalRatingList);
         for (int i = 0; i < finalRatingList.size(); i++) {
             System.out.println((finalRatingList.get(i).first + 1) + " - " + searchMovie(finalRatingList.get(i).first).getName() + " - Score: " + finalRatingList.get(i).second);
+        }
+
+        // Implementación RMSE sobre los datos del usuario 23
+        if (idUser == (23 - 1)) {
+
+            try {
+                DBReader dbReader = DBReader.getInstance();
+                CsvReader user23File = new CsvReader(dbReader.getDirResources() + dbReader.getFileUser23(), ',');
+                user23File.readHeaders();
+                SparseDoubleMatrix1D user23Ratings = new SparseDoubleMatrix1D(2048);
+
+                while (user23File.readRecord()) {
+                    int idItem = Integer.parseInt(user23File.get(0)) - 1;
+                    double rating = Double.parseDouble(user23File.get(1));
+                    user23Ratings.setQuick(idItem, rating);
+                }
+
+                double errorSum = 0.0;
+                int itemCount = 0;
+                for (int i = 0; i < movieQuantity(); i++) {
+                    double userValue = userRatings.get(i);
+                    double user23Value = user23Ratings.get(i);
+                    if (userValue == 0.0 || user23Value == 0.0) {
+                        continue;
+                    }
+                    errorSum += pow(userValue - user23Value, 2);
+                    itemCount++;
+                }
+                double RMSEValue = sqrt(errorSum / itemCount);
+                System.out.println("RMSE value: " + RMSEValue);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Recommender.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Recommender.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
         }
 
     }
