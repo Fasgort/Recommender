@@ -144,6 +144,10 @@ public class DataManager {
             int neighbourCount = 0;
             double sumRating = 0;
             double sumSimilitude = 0;
+            if (dbreader.isDebugRatings() && dbreader.getDebugRatingId() == (i + 1)) {
+                System.out.println("Debug messages for prediction in item " + dbreader.getDebugRatingId() + " --");
+                System.out.println();
+            }
             for (int j = 0; j < dbreader.getNeighborhoodSize(); j++) {
                 DoubleMatrix1D otherUserRatings = ratingIndex.viewRow(similitude.get(j).first);
                 double otherUserValue = otherUserRatings.getQuick(i);
@@ -151,6 +155,23 @@ public class DataManager {
                     continue;
                 }
                 double otherUserMean = otherUserRatings.zSum() / otherUserRatings.cardinality();
+                if (dbreader.isDebugRatings() && dbreader.getDebugRatingId() == (i + 1)) {
+                    System.out.print("Using rating " + otherUserValue + " from neighbour ID " + (similitude.get(j).first + 1) + " with similitude ");
+                    if (dbreader.isUseAdjusted()) {
+                        System.out.println(similitude.get(j).second);
+                    } else {
+                        System.out.println(similitude.get(j).third);
+                    }
+                    System.out.println("This neighbour has a rating mean of " + otherUserMean);
+                    System.out.println("Effective rating is " + (otherUserValue - otherUserMean));
+                    System.out.print("Rating used together with neighbour similitude, makes a effective rating of ");
+                    if (dbreader.isUseAdjusted()) {
+                        System.out.println((otherUserValue - otherUserMean) * similitude.get(j).second);
+                    } else {
+                        System.out.println((otherUserValue - otherUserMean) * similitude.get(j).third);
+                    }
+                    System.out.println();
+                }
                 if (dbreader.isUseAdjusted()) {
                     sumRating += (otherUserValue - otherUserMean) * similitude.get(j).second;
                     sumSimilitude += similitude.get(j).second;
@@ -160,10 +181,20 @@ public class DataManager {
                 }
                 neighbourCount++;
             }
+            if (dbreader.isDebugRatings() && dbreader.getDebugRatingId() == (i + 1)) {
+                System.out.println("We used " + neighbourCount + " predictions from the neighbourhood.");
+            }
             if (neighbourCount == 0) {
                 userRatings.setQuick(i, 0.0);
             } else {
                 double prediction = userMean + sumRating / sumSimilitude;
+                if (dbreader.isDebugRatings() && dbreader.getDebugRatingId() == (i + 1)) {
+                    System.out.println("User prediction mean is " + userMean);
+                    System.out.println("Sum of all ratings for this item is " + sumRating);
+                    System.out.println("Sum of all similitude of our neighbours (with predictions for this item) is " + sumSimilitude);
+                    System.out.println("Our prediction is \"prediction = userMean + SumRating/sumSimilitude\" and the result is " + prediction);
+                    System.out.println();
+                }
                 if (prediction > 5.0) {
                     prediction = 5.0;
                 } else if (prediction < 1.0) {

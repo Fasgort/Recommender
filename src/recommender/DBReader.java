@@ -29,6 +29,9 @@ public class DBReader {
     private int similitudeAdjustValue = -1;
     private boolean useAdjusted = false;
     private boolean useAdjustedRead = false;
+    private boolean debugRatings = false;
+    private boolean debugRatingsRead = false;
+    private int debugRatingId = -1;
     private int resultSize = -1;
 
     private DBReader(String stringConfData) {
@@ -82,12 +85,19 @@ public class DBReader {
                         case "similitudeAdjustValue":
                             similitudeAdjustValue = Integer.parseInt(valor);
                             break;
+                        case "resultSize":
+                            resultSize = Integer.parseInt(valor);
+                            break;
                         case "useAdjusted":
                             useAdjusted = Boolean.parseBoolean(valor);
                             useAdjustedRead = true;
                             break;
-                        case "resultSize":
-                            resultSize = Integer.parseInt(valor);
+                        case "debugRatings":
+                            debugRatings = Boolean.parseBoolean(valor);
+                            debugRatingsRead = true;
+                            break;
+                        case "debugRatingId":
+                            debugRatingId = Integer.parseInt(valor);
                             break;
                     }
                 }
@@ -164,6 +174,12 @@ public class DBReader {
                     bw.newLine();
                 }
 
+                if (resultSize == -1) {
+                    resultSize = 50;
+                    bw.append("resultSize = " + resultSize + " // Size of the result list, ordered from highest rating to lowest.");
+                    bw.newLine();
+                }
+
                 if (similitudeAdjustRead == false) {
                     similitudeAdjust = true;
                     bw.append("similitudeAdjust = " + similitudeAdjust + " // Activate or deactivate use of similitude adjusting.");
@@ -182,9 +198,15 @@ public class DBReader {
                     bw.newLine();
                 }
 
-                if (resultSize == -1) {
-                    resultSize = 50;
-                    bw.append("resultSize = " + resultSize + " // Size of the result list, ordered from highest rating to lowest.");
+                if (debugRatingsRead == false) {
+                    debugRatings = false;
+                    bw.append("debugRatings = " + debugRatings + " // Will include debug messages for calculating a predicted rating.");
+                    bw.newLine();
+                }
+
+                if (debugRatingId == -1) {
+                    debugRatingId = 114;
+                    bw.append("debugRatings = " + debugRatings + " // If debugRatings is true, it will debug the rating choosed here.");
                     bw.newLine();
                 }
 
@@ -240,6 +262,14 @@ public class DBReader {
 
     public int getResultSize() {
         return resultSize;
+    }
+
+    public boolean isDebugRatings() {
+        return debugRatings;
+    }
+
+    public int getDebugRatingId() {
+        return debugRatingId;
     }
 
 }

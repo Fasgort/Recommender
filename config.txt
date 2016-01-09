@@ -5,6 +5,8 @@ similitudeAdjust = true // Activate or deactivate use of similitude adjusting.
 similitudeAdjustValue = 20 // Minimum number of ratings needed for a full similitude value.
 resultSize = 50 // Size of the result list, ordered from highest rating to lowest.
 useAdjusted = true // Use adjusted similitude for rating predicting aswell.
+debugRatings = true // Will include debug messages for calculating a predicted rating.
+debugRatingId = 114 // If debugRatings is true, it will debug the rating choosed here.
 
 // Directorios
 dirResources = ./resources/ // Directory where resources are found.
