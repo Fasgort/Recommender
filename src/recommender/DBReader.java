@@ -25,7 +25,10 @@ public class DBReader {
     private int userIDToPredict = -1;
     private int neighborhoodSize = -1;
     private boolean similitudeAdjust = false;
+    private boolean similitudeAdjustRead = false;
     private int similitudeAdjustValue = -1;
+    private boolean useAdjusted = false;
+    private boolean useAdjustedRead = false;
     private int resultSize = -1;
 
     private DBReader(String stringConfData) {
@@ -74,9 +77,14 @@ public class DBReader {
                             break;
                         case "similitudeAdjust":
                             similitudeAdjust = Boolean.parseBoolean(valor);
+                            similitudeAdjustRead = true;
                             break;
                         case "similitudeAdjustValue":
                             similitudeAdjustValue = Integer.parseInt(valor);
+                            break;
+                        case "useAdjusted":
+                            useAdjusted = Boolean.parseBoolean(valor);
+                            useAdjustedRead = true;
                             break;
                         case "resultSize":
                             resultSize = Integer.parseInt(valor);
@@ -156,7 +164,7 @@ public class DBReader {
                     bw.newLine();
                 }
 
-                if (similitudeAdjust == false) {
+                if (similitudeAdjustRead == false) {
                     similitudeAdjust = true;
                     bw.append("similitudeAdjust = " + similitudeAdjust + " // Activate or deactivate use of similitude adjusting.");
                     bw.newLine();
@@ -165,6 +173,12 @@ public class DBReader {
                 if (similitudeAdjustValue == -1) {
                     similitudeAdjustValue = 20;
                     bw.append("similitudeAdjustValue = " + similitudeAdjustValue + " // Minimum number of ratings needed for a full similitude value.");
+                    bw.newLine();
+                }
+
+                if (useAdjustedRead == false) {
+                    useAdjusted = true;
+                    bw.append("useAdjusted = " + useAdjusted + " // Use adjusted similitude for rating predicting aswell.");
                     bw.newLine();
                 }
 
@@ -218,6 +232,10 @@ public class DBReader {
 
     public int getSimilitudeAdjustValue() {
         return similitudeAdjustValue;
+    }
+
+    public boolean isUseAdjusted() {
+        return useAdjusted;
     }
 
     public int getResultSize() {

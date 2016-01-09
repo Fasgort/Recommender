@@ -4,6 +4,7 @@ neighborhoodSize = 20 // Size of neighborhood.
 similitudeAdjust = true // Activate or deactivate use of similitude adjusting.
 similitudeAdjustValue = 20 // Minimum number of ratings needed for a full similitude value.
 resultSize = 50 // Size of the result list, ordered from highest rating to lowest.
+useAdjusted = true // Use adjusted similitude for rating predicting aswell.
 
 // Directorios
 dirResources = ./resources/ // Directory where resources are found.
