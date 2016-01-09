@@ -1,4 +1,4 @@
-// Parámetros
+﻿// Parámetros
 userIDToPredict = 23 // ID of the ratings user we want to predict.
 neighborhoodSize = 20 // Size of neighborhood.
 similitudeAdjust = true // Activate or deactivate use of similitude adjusting.

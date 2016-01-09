@@ -23,6 +23,10 @@ public class DBReader {
     private String fileUsers = null;
     private String fileUser23 = null;
     private int userIDToPredict = -1;
+    private int neighborhoodSize = -1;
+    private boolean similitudeAdjust = false;
+    private int similitudeAdjustValue = -1;
+    private int resultSize = -1;
 
     private DBReader(String stringConfData) {
 
@@ -64,6 +68,19 @@ public class DBReader {
                             break;
                         case "userIDToPredict":
                             userIDToPredict = Integer.parseInt(valor);
+                            break;
+                        case "neighborhoodSize":
+                            neighborhoodSize = Integer.parseInt(valor);
+                            break;
+                        case "similitudeAdjust":
+                            similitudeAdjust = Boolean.parseBoolean(valor);
+                            break;
+                        case "similitudeAdjustValue":
+                            similitudeAdjustValue = Integer.parseInt(valor);
+                            break;
+                        case "resultSize":
+                            resultSize = Integer.parseInt(valor);
+                            break;
                     }
                 }
             }
@@ -110,19 +127,19 @@ public class DBReader {
                 }
 
                 if (fileItems == null) {
-                    fileItems = "to-csv-content.csv";
+                    fileItems = "items.csv";
                     bw.append("fileItems = " + fileItems + " // Name of fileItems file. It will be located in the resources directory.");
                     bw.newLine();
                 }
 
                 if (fileRatings == null) {
-                    fileRatings = "to-csv-ratings.csv";
+                    fileRatings = "ratings.csv";
                     bw.append("fileRatings = " + fileRatings + " // Name of fileRatings file. It will be located in the resources directory.");
                     bw.newLine();
                 }
 
                 if (fileUsers == null) {
-                    fileUsers = "to-csv-users.csv";
+                    fileUsers = "users.csv";
                     bw.append("fileUsers = " + fileUsers + " // Name of fileUsers file. It will be located in the resources directory.");
                     bw.newLine();
                 }
@@ -130,6 +147,30 @@ public class DBReader {
                 if (fileUser23 == null) {
                     fileUser23 = "user23.csv";
                     bw.append("fileUser23 = " + fileUser23 + " // Name of fileUser23 file. It will be located in the resources directory.");
+                    bw.newLine();
+                }
+
+                if (neighborhoodSize == -1) {
+                    neighborhoodSize = 20;
+                    bw.append("neighborhoodSize = " + neighborhoodSize + " // Size of neighborhood.");
+                    bw.newLine();
+                }
+
+                if (similitudeAdjust == false) {
+                    similitudeAdjust = true;
+                    bw.append("similitudeAdjust = " + similitudeAdjust + " // Activate or deactivate use of similitude adjusting.");
+                    bw.newLine();
+                }
+
+                if (similitudeAdjustValue == -1) {
+                    similitudeAdjustValue = 20;
+                    bw.append("similitudeAdjustValue = " + similitudeAdjustValue + " // Minimum number of ratings needed for a full similitude value.");
+                    bw.newLine();
+                }
+
+                if (resultSize == -1) {
+                    resultSize = 50;
+                    bw.append("resultSize = " + resultSize + " // Size of the result list, ordered from highest rating to lowest.");
                     bw.newLine();
                 }
 
@@ -165,6 +206,22 @@ public class DBReader {
 
     public String getFileUser23() {
         return fileUser23;
+    }
+
+    public int getNeighborhoodSize() {
+        return neighborhoodSize;
+    }
+
+    public boolean isSimilitudeAdjust() {
+        return similitudeAdjust;
+    }
+
+    public int getSimilitudeAdjustValue() {
+        return similitudeAdjustValue;
+    }
+
+    public int getResultSize() {
+        return resultSize;
     }
 
 }

@@ -79,8 +79,9 @@ public class DataManager {
     public void predictRating(int idUser) {
         DoubleMatrix1D userRatings = ratingIndex.viewRow(idUser);
         double userMean = userRatings.zSum() / userRatings.cardinality();
+        DBReader dbreader = DBReader.getInstance();
 
-        ArrayList<ComparablePairDouble<Integer>> similitude = new ArrayList<>(userQuantity());
+        ArrayList<ComparableTriDouble<Integer>> similitude = new ArrayList<>(userQuantity());
 
         for (int i = 0; i < userQuantity(); i++) {
             if (i == idUser) {
@@ -106,18 +107,24 @@ public class DataManager {
                 itemCount++;
             }
             if (itemCount == 0 || sumRatings1 == 0.0) {
-                similitude.add(new ComparablePairDouble(i, 0.0));
+                similitude.add(new ComparableTriDouble(i, 0.0, 0.0));
             } else {
                 if (itemCount < 20) {
-                    similitude.add(new ComparablePairDouble(i, (sumRatings1 / (sqrt(sumRatings2) * sqrt(sumRatings3))) * itemCount / 20));
+                    similitude.add(new ComparableTriDouble(i,
+                            (sumRatings1 / (sqrt(sumRatings2) * sqrt(sumRatings3))) * itemCount / 20,
+                            sumRatings1 / (sqrt(sumRatings2) * sqrt(sumRatings3))));
                 } else {
-                    similitude.add(new ComparablePairDouble(i, sumRatings1 / (sqrt(sumRatings2) * sqrt(sumRatings3))));
+                    similitude.add(new ComparableTriDouble(i,
+                            sumRatings1 / (sqrt(sumRatings2) * sqrt(sumRatings3)),
+                            sumRatings1 / (sqrt(sumRatings2) * sqrt(sumRatings3))));
                 }
             }
         }
 
         Collections.sort(similitude);
         Collections.reverse(similitude);
+        
+        //Include similitude checking of neighborhood here.
 
         for (int i = 0; i < movieQuantity(); i++) {
             if (userRatings.get(i) != 0) {
@@ -126,7 +133,7 @@ public class DataManager {
             int neighbourCount = 0;
             double sumRating = 0;
             double sumSimilitude = 0;
-            for (int j = 0; j < 20; j++) {
+            for (int j = 0; j < dbreader.getNeighborhoodSize(); j++) {
                 DoubleMatrix1D otherUserRatings = ratingIndex.viewRow(similitude.get(j).first);
                 double otherUserValue = otherUserRatings.get(i);
                 if (otherUserValue == 0) {
@@ -151,16 +158,13 @@ public class DataManager {
 
         }
 
-        ArrayList<ComparablePairDouble<Integer>> finalRatingList = new ArrayList(movieQuantity());
+        ArrayList<ComparableTriDouble<Integer>> finalRatingList = new ArrayList(movieQuantity());
 
         for (int i = 0; i < movieQuantity(); i++) {
-            finalRatingList.add(new ComparablePairDouble(i, userRatings.getQuick(i)));
+            finalRatingList.add(new ComparableTriDouble(i, userRatings.getQuick(i), userRatings.getQuick(i)));
         }
         Collections.sort(finalRatingList);
         Collections.reverse(finalRatingList);
-        for (int i = 0; i < finalRatingList.size(); i++) {
-            System.out.println((finalRatingList.get(i).first + 1) + " - " + searchMovie(finalRatingList.get(i).first).getName() + " - Score: " + finalRatingList.get(i).second);
-        }
 
         // Implementación RMSE sobre los datos del usuario 23
         if (idUser == (23 - 1)) {
@@ -176,6 +180,22 @@ public class DataManager {
                     double rating = Double.parseDouble(user23File.get(1));
                     user23Ratings.setQuick(idItem, rating);
                 }
+
+                int count = 0;
+
+                for (int i = 0; i < finalRatingList.size(); i++) {
+
+                    if (finalRatingList.get(i).second != user23Ratings.get(searchMovie(finalRatingList.get(i).first).getID()) 
+                            && (finalRatingList.get(i).second == 0.0 || user23Ratings.get(searchMovie(finalRatingList.get(i).first).getID()) == 0.0)) {
+                        System.out.println((finalRatingList.get(i).first + 1)
+                                + "; " + searchMovie(finalRatingList.get(i).first).getName()
+                                + "; Score: " + finalRatingList.get(i).second
+                                + "; Expected from User 23: " + user23Ratings.get(searchMovie(finalRatingList.get(i).first).getID()));
+                        count++;
+                    }
+                }
+
+                System.out.println("Errors: " + count);
 
                 double errorSum = 0.0;
                 int itemCount = 0;

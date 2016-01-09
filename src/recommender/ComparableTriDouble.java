@@ -10,18 +10,21 @@ package recommender;
  * @author Fasgort
  * @param <T1>
  */
-public class ComparablePairDouble<T1> implements Comparable<ComparablePairDouble<T1>> {
+public class ComparableTriDouble<T1> implements Comparable<ComparableTriDouble<T1>> {
 
     T1 first;
     double second;
+    double third;
 
-    ComparablePairDouble(T1 first, double second) {
+    ComparableTriDouble(T1 first, double second, double third) {
         this.first = first;
         this.second = second;
+        this.third = third;
     }
 
     @Override
-    public int compareTo(ComparablePairDouble w) {
+    public int compareTo(ComparableTriDouble w) {
+        if(this.second == w.second) return 0;
         return this.second > w.second ? 1 : -1;
     }
 
