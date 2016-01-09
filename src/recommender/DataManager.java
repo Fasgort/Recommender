@@ -1,7 +1,11 @@
 package recommender;
 
 import cern.colt.matrix.tdouble.DoubleMatrix1D;
+import cern.colt.matrix.tdouble.impl.SparseDoubleMatrix1D;
 import cern.colt.matrix.tdouble.impl.SparseDoubleMatrix2D;
+import com.csvreader.CsvReader;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import static java.lang.Math.pow;
 import static java.lang.Math.sqrt;
 import java.util.ArrayList;
@@ -224,10 +228,34 @@ public class DataManager {
             ratingListSize = dbreader.getResultSize();
         }
 
+        SparseDoubleMatrix1D user23Ratings = new SparseDoubleMatrix1D(2048);
+
+        try {
+            DBReader dbReader = DBReader.getInstance();
+            CsvReader user23File = new CsvReader(dbReader.getDirResources() + dbReader.getFileUser23(), ',');
+            user23File.readHeaders();
+
+            while (user23File.readRecord()) {
+                int idItem = Integer.parseInt(user23File.get(0)) - 1;
+                double rating = Double.parseDouble(user23File.get(1));
+                user23Ratings.setQuick(idItem, rating);
+            }
+
+        } catch (FileNotFoundException ex) {
+            // do nothing
+        } catch (IOException ex) {
+            // do nothing
+        }
+
         for (int i = 0; i < ratingListSize; i++) {
-            System.out.println((finalRatingList.get(i).first + 1) + " - "
+            System.out.print((finalRatingList.get(i).first + 1) + " - "
                     + searchMovie(finalRatingList.get(i).first).getName()
                     + " - Score: " + finalRatingList.get(i).second);
+            if (idUser == (23 - 1)) {
+                System.out.println("; Expected from User 23: " + user23Ratings.get(searchMovie(finalRatingList.get(i).first).getID()));
+            } else {
+                System.out.println();
+            }
         }
 
     }

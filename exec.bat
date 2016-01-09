@@ -1,2 +1,2 @@
-java -jar Recommender.jar "config.txt"
+java -jar Recommender.jar "config.txt" >> output.txt
 PAUSE
