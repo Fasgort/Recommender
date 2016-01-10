@@ -1,7 +1,6 @@
 package recommender;
 
 import com.csvreader.CsvReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -78,8 +77,8 @@ public class Recommender {
             CsvReader ratingReader = new CsvReader(dbReader.getDirResources() + dbReader.getFileRatings(), ',');
             ratingReader.readHeaders();
             while (ratingReader.readRecord()) {
-                dataManager.addRating(Integer.parseInt(ratingReader.get(0)) - 1, 
-                        Integer.parseInt(ratingReader.get(1)) - 1, 
+                dataManager.addRating(Integer.parseInt(ratingReader.get(0)) - 1,
+                        Integer.parseInt(ratingReader.get(1)) - 1,
                         Integer.parseInt(ratingReader.get(2)));
             }
         } catch (FileNotFoundException ex) {
@@ -87,7 +86,7 @@ public class Recommender {
         } catch (IOException ex) {
             Logger.getLogger(Recommender.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
         // Al turrón
         dataManager.predictRating(dbReader.getUserIDToPredict() - 1);
 

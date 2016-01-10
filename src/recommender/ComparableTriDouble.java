@@ -24,7 +24,9 @@ public class ComparableTriDouble<T1> implements Comparable<ComparableTriDouble<T
 
     @Override
     public int compareTo(ComparableTriDouble w) {
-        if(this.second == w.second) return 0;
+        if (this.second == w.second) {
+            return 0;
+        }
         return this.second > w.second ? 1 : -1;
     }
 

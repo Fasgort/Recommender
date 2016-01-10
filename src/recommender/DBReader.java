@@ -29,6 +29,9 @@ public class DBReader {
     private int similitudeAdjustValue = -1;
     private boolean useAdjusted = false;
     private boolean useAdjustedRead = false;
+    private boolean debugSimilitude = false;
+    private boolean debugSimilitudeRead = false;
+    private int debugSimilitudeId = -1;
     private boolean debugRatings = false;
     private boolean debugRatingsRead = false;
     private int debugRatingId = -1;
@@ -91,6 +94,13 @@ public class DBReader {
                         case "useAdjusted":
                             useAdjusted = Boolean.parseBoolean(valor);
                             useAdjustedRead = true;
+                            break;
+                        case "debugSimilitude":
+                            debugSimilitude = Boolean.parseBoolean(valor);
+                            debugSimilitudeRead = true;
+                            break;
+                        case "debugSimilitudeId":
+                            debugSimilitudeId = Integer.parseInt(valor);
                             break;
                         case "debugRatings":
                             debugRatings = Boolean.parseBoolean(valor);
@@ -198,6 +208,18 @@ public class DBReader {
                     bw.newLine();
                 }
 
+                if (debugSimilitudeRead == false) {
+                    debugSimilitude = false;
+                    bw.append("debugSimilitude = " + debugSimilitude + " // Will include debug messages for calculating similitude with users.");
+                    bw.newLine();
+                }
+
+                if (debugSimilitudeId == -1) {
+                    debugSimilitudeId = 57;
+                    bw.append("debugSimilitudeId = " + debugSimilitudeId + " // If debugSimilitude is true, it will debug the similitude of the user choosed here.");
+                    bw.newLine();
+                }
+
                 if (debugRatingsRead == false) {
                     debugRatings = false;
                     bw.append("debugRatings = " + debugRatings + " // Will include debug messages for calculating a predicted rating.");
@@ -218,6 +240,14 @@ public class DBReader {
 
         }
 
+    }
+
+    public boolean isDebugSimilitude() {
+        return debugSimilitude;
+    }
+
+    public int getDebugSimilitudeId() {
+        return debugSimilitudeId;
     }
 
     public int getUserIDToPredict() {
