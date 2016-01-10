@@ -222,8 +222,8 @@ public class DataManager {
                     continue;
                 }
                 System.out.println("User " + (similitude.get(i).first + 1)
-                        + " has similitude " + similitude.get(i).third
-                        + " and adjusted similitude for ratings " + similitude.get(i).second);
+                        + " has similitude " + similitude.get(i).second
+                        + " and adjusted similitude for ratings " + similitude.get(i).third);
             }
         }
         System.out.println();
