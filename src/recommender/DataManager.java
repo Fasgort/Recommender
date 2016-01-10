@@ -199,7 +199,7 @@ public class DataManager {
         //Include similitude checking of neighborhood here.
         System.out.println("User " + dbreader.getUserIDToPredict() + " neighborhood --");
         System.out.println();
-        if (dbreader.isSimilitudeAdjustItems()) {
+        if (dbreader.isSimilitudeAdjustUsers()) {
             for (int i = 0; i < dbreader.getNeighborhoodSize(); i++) {
                 if (similitude.get(i).second < 0) {
                     continue;
@@ -208,13 +208,22 @@ public class DataManager {
                         + " has adjusted similitude " + similitude.get(i).second
                         + " and not-adjusted similitude " + similitude.get(i).third);
             }
-        } else {
+        } else if (!dbreader.isSimilitudeAdjustItems()) {
             for (int i = 0; i < dbreader.getNeighborhoodSize(); i++) {
                 if (similitude.get(i).second < 0) {
                     continue;
                 }
                 System.out.println("User " + (similitude.get(i).first + 1)
                         + " has similitude " + similitude.get(i).second);
+            }
+        } else {
+            for (int i = 0; i < dbreader.getNeighborhoodSize(); i++) {
+                if (similitude.get(i).second < 0) {
+                    continue;
+                }
+                System.out.println("User " + (similitude.get(i).first + 1)
+                        + " has similitude " + similitude.get(i).third
+                        + " and adjusted similitude for ratings " + similitude.get(i).second);
             }
         }
         System.out.println();
