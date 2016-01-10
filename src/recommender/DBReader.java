@@ -24,11 +24,11 @@ public class DBReader {
     private String fileUser23 = null;
     private int userIDToPredict = -1;
     private int neighborhoodSize = -1;
-    private boolean similitudeAdjust = false;
-    private boolean similitudeAdjustRead = false;
+    private boolean similitudeAdjustUsers = false;
+    private boolean similitudeAdjustUsersRead = false;
+    private boolean similitudeAdjustItems = false;
+    private boolean similitudeAdjustItemsRead = false;
     private int similitudeAdjustValue = -1;
-    private boolean useAdjusted = false;
-    private boolean useAdjustedRead = false;
     private boolean debugSimilitude = false;
     private boolean debugSimilitudeRead = false;
     private int debugSimilitudeId = -1;
@@ -81,19 +81,18 @@ public class DBReader {
                         case "neighborhoodSize":
                             neighborhoodSize = Integer.parseInt(valor);
                             break;
-                        case "similitudeAdjust":
-                            similitudeAdjust = Boolean.parseBoolean(valor);
-                            similitudeAdjustRead = true;
+                        case "similitudeAdjustUsers":
+                            similitudeAdjustUsers = Boolean.parseBoolean(valor);
+                            similitudeAdjustUsersRead = true;
+                        case "similitudeAdjustItems":
+                            similitudeAdjustItems = Boolean.parseBoolean(valor);
+                            similitudeAdjustItemsRead = true;
                             break;
                         case "similitudeAdjustValue":
                             similitudeAdjustValue = Integer.parseInt(valor);
                             break;
                         case "resultSize":
                             resultSize = Integer.parseInt(valor);
-                            break;
-                        case "useAdjusted":
-                            useAdjusted = Boolean.parseBoolean(valor);
-                            useAdjustedRead = true;
                             break;
                         case "debugSimilitude":
                             debugSimilitude = Boolean.parseBoolean(valor);
@@ -190,21 +189,21 @@ public class DBReader {
                     bw.newLine();
                 }
 
-                if (similitudeAdjustRead == false) {
-                    similitudeAdjust = true;
-                    bw.append("similitudeAdjust = " + similitudeAdjust + " // Activate or deactivate use of similitude adjusting.");
+                if (similitudeAdjustUsersRead == false) {
+                    similitudeAdjustUsers = true;
+                    bw.append("similitudeAdjustUsers = " + similitudeAdjustUsers + " // Activate or deactivate use of similitude adjusting for neighborhood.");
+                    bw.newLine();
+                }
+
+                if (similitudeAdjustItemsRead == false) {
+                    similitudeAdjustItems = true;
+                    bw.append("similitudeAdjustItems = " + similitudeAdjustItems + " // Activate or deactivate use of similitude adjusting for rating prediction.");
                     bw.newLine();
                 }
 
                 if (similitudeAdjustValue == -1) {
                     similitudeAdjustValue = 20;
                     bw.append("similitudeAdjustValue = " + similitudeAdjustValue + " // Minimum number of ratings needed for a full similitude value.");
-                    bw.newLine();
-                }
-
-                if (useAdjustedRead == false) {
-                    useAdjusted = true;
-                    bw.append("useAdjusted = " + useAdjusted + " // Use adjusted similitude for rating predicting aswell.");
                     bw.newLine();
                 }
 
@@ -278,16 +277,16 @@ public class DBReader {
         return neighborhoodSize;
     }
 
-    public boolean isSimilitudeAdjust() {
-        return similitudeAdjust;
+    public boolean isSimilitudeAdjustUsers() {
+        return similitudeAdjustUsers;
+    }
+
+    public boolean isSimilitudeAdjustItems() {
+        return similitudeAdjustItems;
     }
 
     public int getSimilitudeAdjustValue() {
         return similitudeAdjustValue;
-    }
-
-    public boolean isUseAdjusted() {
-        return useAdjusted;
     }
 
     public int getResultSize() {

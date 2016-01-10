@@ -118,7 +118,7 @@ public class DataManager {
             if (itemCount == 0 || sumRatings1 == 0.0) {
                 similitude.add(new ComparableTriDouble(i, 0.0, 0.0));
             } else {
-                if (itemCount < dbreader.getSimilitudeAdjustValue() && dbreader.isSimilitudeAdjust()) {
+                if (itemCount < dbreader.getSimilitudeAdjustValue() && dbreader.isSimilitudeAdjustUsers()) {
                     similitude.add(new ComparableTriDouble(i,
                             (sumRatings1 / (sqrt(sumRatings2) * sqrt(sumRatings3))) * itemCount / dbreader.getSimilitudeAdjustValue(),
                             sumRatings1 / (sqrt(sumRatings2) * sqrt(sumRatings3))));
@@ -139,6 +139,30 @@ public class DataManager {
                                 + " once we do the square root");
                         System.out.println("All together, we get a final similitude value of " + (sumRatings1 / (sqrt(sumRatings2) * sqrt(sumRatings3))));
                         System.out.println("Since we only got " + itemCount + " ratings between the users, we adjust similitude to " + ((itemCount / dbreader.getSimilitudeAdjustValue()) * 100) + "% of its value.");
+                        System.out.println();
+                        System.out.println();
+                    }
+                } else if (itemCount < dbreader.getSimilitudeAdjustValue() && dbreader.isSimilitudeAdjustItems()) {
+                    similitude.add(new ComparableTriDouble(i,
+                            sumRatings1 / (sqrt(sumRatings2) * sqrt(sumRatings3)),
+                            (sumRatings1 / (sqrt(sumRatings2) * sqrt(sumRatings3))) * itemCount / dbreader.getSimilitudeAdjustValue()));
+                    if (dbreader.isDebugSimilitude() && i == (dbreader.getDebugSimilitudeId() - 1)) {
+                        System.out.println("There were " + itemCount + " ratings between the users.");
+                        System.out.println("Rating mean of user " + dbreader.getUserIDToPredict() + " is " + userMean);
+                        System.out.println("Rating mean of user " + dbreader.getDebugSimilitudeId() + " is " + otherUserMean);
+                        System.out.println("If we add all the ratings of each user, substracting rating mean of each, and then multiply them, we get " + sumRatings1);
+                        System.out.println("Adding each rating of user "
+                                + dbreader.getUserIDToPredict()
+                                + " squared, we get " + sumRatings2
+                                + ", which turns to be " + sqrt(sumRatings2)
+                                + " once we do the square root");
+                        System.out.println("Adding each rating of user "
+                                + dbreader.getDebugSimilitudeId()
+                                + " squared, we get " + sumRatings3
+                                + ", which turns to be " + sqrt(sumRatings3)
+                                + " once we do the square root");
+                        System.out.println("All together, we get a final similitude value of " + (sumRatings1 / (sqrt(sumRatings2) * sqrt(sumRatings3))));
+                        System.out.println("Since we only got " + itemCount + ", our adjusted similitude for ratings will be a " + ((itemCount / dbreader.getSimilitudeAdjustValue()) * 100) + "% of neighbour similitude value.");
                         System.out.println();
                         System.out.println();
                     }
@@ -175,14 +199,20 @@ public class DataManager {
         //Include similitude checking of neighborhood here.
         System.out.println("User " + dbreader.getUserIDToPredict() + " neighborhood --");
         System.out.println();
-        if (dbreader.isSimilitudeAdjust()) {
+        if (dbreader.isSimilitudeAdjustItems()) {
             for (int i = 0; i < dbreader.getNeighborhoodSize(); i++) {
+                if (similitude.get(i).second < 0) {
+                    continue;
+                }
                 System.out.println("User " + (similitude.get(i).first + 1)
                         + " has adjusted similitude " + similitude.get(i).second
                         + " and not-adjusted similitude " + similitude.get(i).third);
             }
         } else {
             for (int i = 0; i < dbreader.getNeighborhoodSize(); i++) {
+                if (similitude.get(i).second < 0) {
+                    continue;
+                }
                 System.out.println("User " + (similitude.get(i).first + 1)
                         + " has similitude " + similitude.get(i).second);
             }
@@ -202,6 +232,9 @@ public class DataManager {
                 System.out.println();
             }
             for (int j = 0; j < dbreader.getNeighborhoodSize(); j++) {
+                if (similitude.get(j).second < 0) {
+                    continue;
+                }
                 DoubleMatrix1D otherUserRatings = ratingIndex.viewRow(similitude.get(j).first);
                 double otherUserValue = otherUserRatings.getQuick(i);
                 if (otherUserValue == 0) {
@@ -210,22 +243,26 @@ public class DataManager {
                 double otherUserMean = otherUserRatings.zSum() / otherUserRatings.cardinality();
                 if (dbreader.isDebugRatings() && dbreader.getDebugRatingId() == (i + 1)) {
                     System.out.print("Using rating " + otherUserValue + " from neighbour ID " + (similitude.get(j).first + 1) + " with similitude ");
-                    if (dbreader.isUseAdjusted()) {
+                    if (dbreader.isSimilitudeAdjustItems() && dbreader.isSimilitudeAdjustUsers()) {
                         System.out.println(similitude.get(j).second);
                     } else {
-                        System.out.println(similitude.get(j).third);
+                        if (!dbreader.isSimilitudeAdjustUsers() && dbreader.isSimilitudeAdjustItems()) {
+                            System.out.println(similitude.get(j).second + " and adjusted similitude for ratings " + similitude.get(j).third);
+                        } else {
+                            System.out.println(similitude.get(j).third);
+                        }
                     }
                     System.out.println("This neighbour has a rating mean of " + otherUserMean);
                     System.out.println("Effective rating is " + (otherUserValue - otherUserMean));
                     System.out.print("Rating used together with neighbour similitude, makes a effective rating of ");
-                    if (dbreader.isUseAdjusted()) {
+                    if (dbreader.isSimilitudeAdjustItems() && dbreader.isSimilitudeAdjustUsers()) {
                         System.out.println((otherUserValue - otherUserMean) * similitude.get(j).second);
                     } else {
                         System.out.println((otherUserValue - otherUserMean) * similitude.get(j).third);
                     }
                     System.out.println();
                 }
-                if (dbreader.isUseAdjusted()) {
+                if (dbreader.isSimilitudeAdjustItems() && dbreader.isSimilitudeAdjustUsers()) {
                     sumRating += (otherUserValue - otherUserMean) * similitude.get(j).second;
                     sumSimilitude += similitude.get(j).second;
                 } else {

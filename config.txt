@@ -1,10 +1,10 @@
 // Parámetros
 userIDToPredict = 23 // ID of the ratings user we want to predict.
 neighborhoodSize = 30 // Size of neighborhood.
-similitudeAdjust = true // Activate or deactivate use of similitude adjusting.
+similitudeAdjustUsers = true // Activate or deactivate use of similitude adjusting for neighborhood.
+similitudeAdjustItems = true // Activate or deactivate use of similitude adjusting for rating prediction.
 similitudeAdjustValue = 20 // Minimum number of ratings needed for a full similitude value.
-resultSize = 5000 // Size of the result list, ordered from highest rating to lowest.
-useAdjusted = true // Use adjusted similitude for rating predicting aswell.
+resultSize = 50 // Size of the result list, ordered from highest rating to lowest.
 debugSimilitude = true // Will include debug messages for calculating similitude with users.
 debugSimilitudeId = 57 // If debugSimilitude is true, it will debug the similitude of the user choosed here.
 debugRatings = true // Will include debug messages for calculating a predicted rating.
